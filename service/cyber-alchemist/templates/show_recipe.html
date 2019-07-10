@@ -1,0 +1,144 @@
+{% extends "_base.html" %}
+{% block content %}
+	<section class="section">
+		<div class="container">
+			<h3 class="title is-3">
+				<i class="fa fa-file-invoice"></i> Recipe "{{ recipe.name }}"
+				<span style="float: right;">
+					<a href="{{ url_for('export_recipe', recipe_name=recipe.name) }}">
+						<i class="fas fa-download"></i>
+					</a>
+					<a href="{{ url_for('delete_recipe', recipe_name=recipe.name) }}">
+						<i class="fas fa-trash-alt"></i>
+					</a>
+				</span>
+			</h3>
+			<hr style="background: #273149;">
+			<div class="columns">
+				<div class="column is-3">
+					<aside class="is-medium menu">
+						<p class="menu-label">
+							<i class="fas fa-chevron-right"></i> Ingredients
+						</p>
+						<ul class="menu-list">
+							<hr class="ingredients base64">
+							<li>
+								<a href="{{ url_for('put_ingredient', recipe_name=recipe.name, ingredient='base64', method='encode') }}"
+								   class="is-active"><i class="fas fa-sort-alpha-down"></i> Base64 - Encode</a></li>
+							<li>
+								<a href="{{ url_for('put_ingredient', recipe_name=recipe.name, ingredient='base64', method='decode') }}"
+								   class="is-active"><i class="fas fa-sort-alpha-up"></i> Base64 - Decode</a></li>
+							<hr class="ingredients hex">
+							<li>
+								<a href="{{ url_for('put_ingredient', recipe_name=recipe.name, ingredient='hex', method='encode') }}"
+								   class="is-active"><i class="fas fa-heading"></i> Hex - Encode</a></li>
+							<li>
+								<a href="{{ url_for('put_ingredient', recipe_name=recipe.name, ingredient='hex', method='decode') }}"
+								   class="is-active"><i class="fas fa-heading"></i> Hex - Decode</a></li>
+							<li>
+								<a href="{{ url_for('put_ingredient', recipe_name=recipe.name, ingredient='hex', method='dump') }}"
+								   class="is-active"><i class="fas fa-file-export"></i> Hexdump</a></li>
+							<li>
+								<a href="{{ url_for('put_ingredient', recipe_name=recipe.name, ingredient='hex', method='restore') }}"
+								   class="is-active"><i class="fas fa-file-import"></i> Restore</a></li>
+							<hr class="ingredients unicode">
+							<li>
+								<a href="{{ url_for('put_ingredient', recipe_name=recipe.name, ingredient='unicode', method='encode') }}"
+								   class="is-active"><i class="fas fa-language"></i> Unicode - Encode</a></li>
+							<li>
+								<a href="{{ url_for('put_ingredient', recipe_name=recipe.name, ingredient='unicode', method='decode') }}"
+								   class="is-active"><i class="fas fa-language"></i> Unicode - Decode</a></li>
+							<hr class="ingredients url">
+							<li>
+								<a href="{{ url_for('put_ingredient', recipe_name=recipe.name, ingredient='url', method='encode') }}"
+								   class="is-active"><i class="fas fa-percent"></i> URL - Encode</a></li>
+							<li>
+								<a href="{{ url_for('put_ingredient', recipe_name=recipe.name, ingredient='url', method='decode') }}"
+								   class="is-active"><i class="fas fa-percent"></i> URL - Decode</a></li>
+						</ul>
+					</aside>
+				</div>
+				<div class="column is-3">
+					<aside class="is-medium menu">
+						<p class="menu-label">
+							<i class="fas fa-chevron-right"></i> Steps
+						</p>
+						<hr class="ingredients">
+						<ol>
+							{% for ingredient in recipe.ingredients %}
+								<li{% if step_failed == loop.index %}
+									style="color: red;" {% endif %}>{{ ingredient | print_ingredient }}
+									{% if step_failed == loop.index %}
+										<i class="fa fa-exclamation-triangle is-danger"></i>
+									{% endif %}
+									<span style="float: right;">
+										<a href="{{ url_for('move_ingredient', recipe_name=recipe.name, old_step=loop.index, new_step=loop.index - 1) }}"
+										   {% if loop.index == 1 %}style="visibility:hidden"{% endif %}>
+											<i class="fas fa-arrow-up"></i>
+										</a>
+										<a href="{{ url_for('move_ingredient', recipe_name=recipe.name, old_step=loop.index, new_step=loop.index + 1) }}"
+										   {% if loop.index == recipe.ingredients|length %} style="visibility:hidden"{% endif %}>
+											<i class="fas fa-arrow-down"></i>
+										</a>
+										<a href="{{ url_for('delete_ingredient', recipe_name=recipe.name, step=loop.index) }}">
+											<i class="fas fa-trash-alt"></i>
+										</a>
+									</span>
+								</li>
+							{% else %}
+								<i class="fas fa-plus-circle"></i> Add ingredients to edit steps
+							{% endfor %}
+						</ol>
+					</aside>
+				</div>
+				<div class="column is-6">
+					<div class="content is-medium">
+						<h3 class="title is-3"><i class="fas fa-balance-scale"></i> Formula</h3>
+						<div class="box">
+							<h4 id="const" class="title is-3"><i class="fas fa-flask"></i> Base Ingredient</h4>
+							<form id="input-form" action="{{ url_for('put_base_ingredient', recipe_name=recipe.name) }}"
+							      method="POST">
+								<div class="field">
+									<div class="control">
+										<input class="input" type="text" name="base_ingredient" {% if recipe.base_ingredient %}value{% else %}placeholder{% endif %}="{{ recipe.base_ingredient }}">
+									</div>
+								</div>
+								<div class="field">
+									<div class="control">
+										<button class="button is-link">Put Ingredient &nbsp;<i
+												class="fas fa-chevron-right"></i></button>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="box">
+							<h4 id="let" class="title is-3"><i class="fas fa-bong"></i> Potion</h4>
+							{% if error %}
+								<article class="message is-danger">
+									<span class="icon">
+										<i class="fa fa-exclamation-triangle"></i>
+									</span>
+									<div class="message-body">
+										{{ error }}
+									</div>
+								</article>
+							{% else %}
+								{% if recipe.potion and recipe.ingredients %}
+									<article class="message is-success">
+									<span class="icon">
+										<i class="fa fa-check"></i>
+									</span>
+										<div class="message-body">
+											Auto-brewing is enabled
+										</div>
+									</article>
+								{% endif %}
+							{% endif %}
+							<pre><code class="language-javascript">{% if recipe.potion %}{{ recipe.potion }}{% else %}None{% endif %}</code></pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

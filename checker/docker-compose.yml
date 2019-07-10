@@ -1,0 +1,47 @@
+version: '3.6'
+services:
+  cyber-alchemist-checker-backend:
+    build: .
+    environment:
+    - MONGO_ENABLED=1
+    - MONGO_HOST=cyber-alchemist-db
+    - MONGO_PORT=27017
+    - MONGO_USER=ipv6islove
+    - MONGO_PASSWORD=dockerislove
+    image: dockerreg.enowars.com:5000/cyber-alchemist-checker-backend
+    networks:
+    - bridge
+    - enoverlay
+    deploy:
+      labels:
+      - traefik.enable=true
+      - traefik.backend=cyber-alchemist-checker
+      - traefik.docker.network=enoverlay
+      - traefik.frontend.rule=Host:cyberalchemist.checker.enowars.com,service13.checker.enowars.com
+      - traefik.port=3031
+      replicas: 1
+      placement:
+        constraints:
+          - "node.hostname==blade3"
+  cyber-alchemist-db:
+    image: mongo
+    networks:
+      - enoverlay
+    volumes:
+      - cyber-alchemist_db_data:/data/db
+#we need to fix the node otherwise the volumes are lost after migration :/
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - "node.hostname==blade3"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ipv6islove
+      MONGO_INITDB_ROOT_PASSWORD: dockerislove
+networks:
+  bridge:
+    external: true
+  enoverlay:
+    external: true
+volumes:
+  cyber-alchemist_db_data:

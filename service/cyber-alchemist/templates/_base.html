@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CyberAlchemist</title>
+	<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+	<link rel='stylesheet' href='https://unpkg.com/bulma@0.7.4/css/bulma.min.css'>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+	      integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<link rel='stylesheet' href="{{ url_for('static', filename='prism.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='cheatsheet.css') }}">
+</head>
+<body>
+<section class="hero is-primary">
+	<div class="hero-body">
+		<div class="columns">
+			<div class="column is-12">
+				<div class="container content">
+					<a href="{{ url_for('index') }}">
+						<i class="is-large fas fa-bong"></i>
+						<i class="is-large fas fa-code"></i>
+						<h1 class="title">Cyber<em>Alchemist</em></h1>
+					</a>
+					<h3 class="subtitle">
+						Collection of code goodies for next-level A/D CTFs
+					</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+{% block content %}{% endblock %}
+
+{% if not cookies_accepted %}
+<div class="modal is-active">
+	<div class="modal-background"></div>
+	<div class="modal-card">
+		<header class="modal-card-head">
+			<p class="modal-card-title"><i class="fas fa-cookie-bite"></i> This Website uses cookies</p>
+			<button class="delete" aria-label="close" style="pointer-events: none;"></button>
+		</header>
+		<section class="modal-card-body">
+			A cookie is a small text file containing information that a website transfers to your computer’s hard disk for record-keeping purposes and allows us to analyse our site traffic patterns. It does not contain chocolate chips, you cannot eat it and there is no special hidden jar.
+		</section>
+		<img src="{{ url_for('static', filename='cookie.jpg') }}" width="100%">
+		<footer class="modal-card-foot">
+			<!-- TODO: Add href to cookie-accept here -->
+			<button class="button is-link" onclick="document.getElementsByClassName('modal')[0].classList.remove('is-active');">Accept</button>
+			<button class="button" disabled>Disallow</button>
+		</footer>
+	</div>
+</div>
+{% endif %}
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/prism.js'></script>
+<script>
+    window.addEventListener('resize', () => {
+        const divs = document.querySelectorAll(".menu-list");
+    if (window.innerWidth < 768){
+        divs.forEach(div => div.classList.add("tags"));
+    }
+    else {
+        divs.forEach(div => div.classList.remove("tags"));
+    }
+    });
+</script>
+</body>
+</html>

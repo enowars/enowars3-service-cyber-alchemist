@@ -1,0 +1,20 @@
+version: "2.4"
+# enable_ipv6 requires version 2
+
+services:
+  gunicorn:
+    build: ./gunicorn
+    volumes:
+      - ./cyber-alchemist:/app
+    networks:
+      cyber-alchemist_network:
+        ipv6_address: fd00:1337:TEAMID:baba::1
+    restart: unless-stopped
+networks:
+  cyber-alchemist_network:
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+        - subnet: fd00:1337:TEAMID:baba::/64
+          gateway: fd00:1337:TEAMID:baba::ffff
