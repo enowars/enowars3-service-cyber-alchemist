@@ -21,5 +21,5 @@ COPY ./checker.py checker.py
 #ENTRYPOINT ["/bin/bash"]
 ENTRYPOINT [ "uwsgi", "--uid", "uwsgi", \
                "--socket", "[::]:3031", \
-               "--protocol", "http", \
+               "--protocol", "uwsgi", \
                "--ini", "/checker/uwsgi.ini" ]
