@@ -1,0 +1,7 @@
+{
+    "name": "cyber-alchemist",
+    "ports": [8787],
+    "flagcount": 1,
+    "checkerport": 7878,
+    "description": "The last ad free cyber support tool."
+}

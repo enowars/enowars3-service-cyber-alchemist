@@ -1,0 +1,44 @@
+{% extends "_base.html" %}
+{% block content %}
+	<section class="section">
+		<div class="container">
+			<div class="columns">
+				<div class="column is-3">
+					<aside class="is-medium menu">
+						<p class="menu-label">
+							<i class="fas fa-chevron-right"></i> Tasks
+						</p>
+						<ul class="menu-list">
+							<li>
+								<a href="{{ url_for('create_recipe') }}"{% if request.path == '/recipes/create' %}
+							       class="is-active"{% endif %}>
+									<i class="fas fa-plus-circle"></i> Create Recipe
+								</a>
+							</li>
+							<li>
+								<a href="{{ url_for('import_recipe') }}"{% if request.path == '/recipes/import' %}
+							       class="is-active"{% endif %}>
+									<i class="fas fa-upload"></i> Import Recipe
+								</a>
+							</li>
+							<li>
+								<a href="{{ url_for('list_recipes') }}"{% if request.path == '/recipes/list' %}
+							       class="is-active"{% endif %}>
+									<i class="fas fa-list"></i> My Recipes
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</div>
+				<div class="column is-9">
+					<div class="content is-medium">
+						<div class="box">
+							{% block box %}{% endblock box %}
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock content %}
